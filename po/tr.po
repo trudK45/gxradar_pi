@@ -1,21 +1,19 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: gxradar_pi 1.0\n"
+"Project-Id-Version: opencpn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-06 09:33-0600\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2015-01-06 10:37-0500\n"
+"Last-Translator: nohal <pavel@kalian.cz>\n"
+"Language-Team: Turkish\n"
+"Language: tr_TR\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: opencpn\n"
+"X-Crowdin-File: /gxradar_pi/po/gxradar_pi.pot\n"
 
 #: src/gxradar_pi.cpp:782
 msgid "Radar Control Garmin"
@@ -34,16 +32,11 @@ msgid "No scanner activity, reverting to search\n"
 msgstr ""
 
 #: src/gxradar_pi.cpp:2995
-msgid ""
-"The Radar Overlay PlugIn requires OpenGL mode to be activated in Toolbox-"
-">Settings"
+msgid "The Radar Overlay PlugIn requires OpenGL mode to be activated in Toolbox->Settings"
 msgstr ""
 
 #: src/gxradar_pi.cpp:3008
-msgid ""
-"The Radar Overlay PlugIn is unable to\n"
-"directly control the radar scanner.\n"
-"\n"
+msgid "The Radar Overlay PlugIn is unable to\ndirectly control the radar scanner.\n\n"
 msgstr ""
 
 #: src/gxradar_pi.cpp:3009
@@ -345,3 +338,4 @@ msgstr ""
 #: src/GxRadarUI.h:268
 msgid "RadarSentryAlarm"
 msgstr ""
+
