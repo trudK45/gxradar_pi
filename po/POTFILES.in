@@ -1,0 +1,6 @@
+src/gxradar_pi.cpp
+src/gxradar_pi.h
+src/gxradardialog.cpp
+src/gxradardialog.h
+src/GxRadarUI.cpp
+src/GxRadarUI.h
