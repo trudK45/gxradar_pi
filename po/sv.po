@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: opencpn\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-06 09:33-0600\n"
-"PO-Revision-Date: 2015-01-06 10:37-0500\n"
+"PO-Revision-Date: 2015-05-29 14:06-0400\n"
 "Last-Translator: nohal <pavel@kalian.cz>\n"
 "Language-Team: Swedish\n"
 "Language: sv_SE\n"
@@ -13,63 +13,66 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: crowdin.com\n"
 "X-Crowdin-Project: opencpn\n"
-"X-Crowdin-File: /gxradar_pi/po/gxradar_pi.pot\n"
+"X-Crowdin-Language: sv-SE\n"
+"X-Crowdin-File: /plugins/gxradar_pi/po/gxradar_pi.pot\n"
 
 #: src/gxradar_pi.cpp:782
 msgid "Radar Control Garmin"
-msgstr ""
+msgstr "Garmin radarInställningar"
 
 #: src/gxradar_pi.cpp:924
 msgid "Garmin Radar PlugIn for OpenCPN"
-msgstr ""
+msgstr "Garmin Radarmodul för OpenCPN"
 
 #: src/gxradar_pi.cpp:929
 msgid "Garmin Radar PlugIn for OpenCPN\n"
-msgstr ""
+msgstr "Garmin Radarmodul för OpenCPN\n"
 
 #: src/gxradar_pi.cpp:1207
 msgid "No scanner activity, reverting to search\n"
-msgstr ""
+msgstr "Ingen scanneraktivitet, återstartar sökning\n"
 
 #: src/gxradar_pi.cpp:2995
 msgid "The Radar Overlay PlugIn requires OpenGL mode to be activated in Toolbox->Settings"
-msgstr ""
+msgstr "Överlagrad radarmodul kräver att OpenGL-läge är aktiverat i Användarinställningar -> Visa ->Avancerat"
 
 #: src/gxradar_pi.cpp:3008
-msgid "The Radar Overlay PlugIn is unable to\ndirectly control the radar scanner.\n\n"
-msgstr ""
+msgid "The Radar Overlay PlugIn is unable to\n"
+"directly control the radar scanner.\n\n"
+msgstr "Radarmodulen kan inte ändra\n"
+"inställningarna för scannern.\n\n"
 
 #: src/gxradar_pi.cpp:3009
 msgid "Scanner is located at ip address: "
-msgstr ""
+msgstr "Skannern använder IP-adress: "
 
 #: src/gxradar_pi.cpp:3012
 msgid "Interfaces available on this computer are:\n"
-msgstr ""
+msgstr "På denna dator finns följande gränssnitt:\n"
 
 #: src/GxRadarUI.cpp:23
 msgid "Operational Control"
-msgstr ""
+msgstr "Driftinställningar"
 
 #: src/GxRadarUI.cpp:25
 msgid "Master Mode"
-msgstr ""
+msgstr "Master-läge"
 
 #: src/GxRadarUI.cpp:25
 msgid "Slave Mode"
-msgstr ""
+msgstr "Slav-läge"
 
 #: src/GxRadarUI.cpp:27
 msgid "Operating Mode"
-msgstr ""
+msgstr "Driftsläge"
 
 #: src/GxRadarUI.cpp:35
 msgid "Display Options"
-msgstr ""
+msgstr "Skärminställningar"
 
 #: src/GxRadarUI.cpp:37
 msgid "Swept Scan Update"
-msgstr ""
+msgstr "Svepuppdatering"
 
 #: src/GxRadarUI.cpp:37
 msgid "Full Scan Update"
@@ -77,35 +80,35 @@ msgstr ""
 
 #: src/GxRadarUI.cpp:39
 msgid "Scan Update Method"
-msgstr ""
+msgstr "Uppdateringsmetod"
 
 #: src/GxRadarUI.cpp:44
 msgid "Scan Color"
-msgstr ""
+msgstr "Radarbildens färg"
 
 #: src/GxRadarUI.cpp:53
 msgid "Scan Transparency"
-msgstr ""
+msgstr "Transparens"
 
 #: src/GxRadarUI.cpp:64
 msgid "Enable gradar Log"
-msgstr ""
+msgstr "Aktivera radarlogg"
 
 #: src/GxRadarUI.cpp:67 src/GxRadarUI.h:102
 msgid "Range Control"
-msgstr ""
+msgstr "Avståndsinställning"
 
 #: src/GxRadarUI.cpp:70 src/GxRadarUI.h:137
 msgid "Noise Control"
-msgstr ""
+msgstr "Störningsinställning"
 
 #: src/GxRadarUI.cpp:73 src/GxRadarUI.h:164
 msgid "Dome Control"
-msgstr ""
+msgstr "Scannerinställningar"
 
 #: src/GxRadarUI.cpp:76 src/GxRadarUI.h:211
 msgid "Sentry Control"
-msgstr ""
+msgstr "Larminställningar"
 
 #: src/GxRadarUI.cpp:79 src/GxRadarUI.h:244
 msgid "No Xmit Zone"
@@ -115,108 +118,108 @@ msgstr ""
 #: src/GxRadarUI.cpp:350 src/GxRadarUI.cpp:526 src/GxRadarUI.cpp:647
 #: src/GxRadarUI.cpp:709
 msgid "Close"
-msgstr ""
+msgstr "Avsluta"
 
 #: src/GxRadarUI.cpp:140
 msgid "Range Setting"
-msgstr ""
+msgstr "Avståndsinställningar"
 
 #: src/GxRadarUI.cpp:142
 msgid "Auto"
-msgstr ""
+msgstr "Auto"
 
 #: src/GxRadarUI.cpp:142 src/GxRadarUI.cpp:160
 msgid "Manual"
-msgstr ""
+msgstr "Manuell"
 
 #: src/GxRadarUI.cpp:148
 msgid ".125"
-msgstr ""
+msgstr ".125"
 
 #: src/GxRadarUI.cpp:148
 msgid ".25"
-msgstr ""
+msgstr ".25"
 
 #: src/GxRadarUI.cpp:148
 msgid ".50"
-msgstr ""
+msgstr ".50"
 
 #: src/GxRadarUI.cpp:148
 msgid ".75"
-msgstr ""
+msgstr ".75"
 
 #: src/GxRadarUI.cpp:148
 msgid "1.0"
-msgstr ""
+msgstr "1.0"
 
 #: src/GxRadarUI.cpp:148
 msgid "1.5"
-msgstr ""
+msgstr "1,5"
 
 #: src/GxRadarUI.cpp:148
 msgid "2"
-msgstr ""
+msgstr "2"
 
 #: src/GxRadarUI.cpp:148
 msgid "3"
-msgstr ""
+msgstr "3"
 
 #: src/GxRadarUI.cpp:148
 msgid "4"
-msgstr ""
+msgstr "4"
 
 #: src/GxRadarUI.cpp:148
 msgid "6"
-msgstr ""
+msgstr "6"
 
 #: src/GxRadarUI.cpp:148
 msgid "8"
-msgstr ""
+msgstr "8"
 
 #: src/GxRadarUI.cpp:148
 msgid "12"
-msgstr ""
+msgstr "12"
 
 #: src/GxRadarUI.cpp:148
 msgid "16"
-msgstr ""
+msgstr "16"
 
 #: src/GxRadarUI.cpp:148
 msgid "24"
-msgstr ""
+msgstr "24"
 
 #: src/GxRadarUI.cpp:148
 msgid "36"
-msgstr ""
+msgstr "36"
 
 #: src/GxRadarUI.cpp:148
 msgid "48"
-msgstr ""
+msgstr "48"
 
 #: src/GxRadarUI.cpp:150
 msgid "Range Miles"
-msgstr ""
+msgstr "Avstånd Nm"
 
 #: src/GxRadarUI.cpp:158
 msgid "Gain"
-msgstr ""
+msgstr "Förstärkning"
 
 #: src/GxRadarUI.cpp:160
 msgid "Auto High"
-msgstr ""
+msgstr "Auto Hög"
 
 #: src/GxRadarUI.cpp:160
 msgid "Auto Low"
-msgstr ""
+msgstr "Auto låg"
 
 #: src/GxRadarUI.cpp:224
 msgid "SeaClutter Sensitivity Time Control"
-msgstr ""
+msgstr "Tidsinställning sjöfilter"
 
 #: src/GxRadarUI.cpp:226 src/GxRadarUI.cpp:247 src/GxRadarUI.cpp:262
 #: src/GxRadarUI.cpp:397 src/GxRadarUI.cpp:433 src/GxRadarUI.cpp:593
 msgid "Off"
-msgstr ""
+msgstr "Av"
 
 #: src/GxRadarUI.cpp:226 src/GxRadarUI.cpp:247 src/GxRadarUI.cpp:262
 #: src/GxRadarUI.cpp:397 src/GxRadarUI.cpp:433 src/GxRadarUI.cpp:593
