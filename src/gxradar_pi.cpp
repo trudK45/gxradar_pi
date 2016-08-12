@@ -86,7 +86,8 @@ static const long long lNaN = 0xfff8000000000000;
 #define NO_OF_RADIALS 1440
 #define LAST_RADIAL   1439
 
-bool              g_thread_active;
+bool              g_RXthread_active;
+bool              g_Sthread_active;
 
 unsigned char buf[10000];           // The data buffer shared between the RX thread and the main thread
 
@@ -813,10 +814,16 @@ bool gxradar_pi::DeInit(void)
             {}
         }
     }
+	    wxCriticalSectionLocker enter( m_pThreadCS );
+        if ( m_mcrx_video )
+        {
+            if ( m_mcrx_video->Delete() != wxTHREAD_NO_ERROR )
+            {}
+        }
     int max_timeout = 5;
     int timeout = max_timeout;        // deadman
 
-    while (g_thread_active && timeout > 0)
+    while ((g_RXthread_active || g_Sthread_active) && timeout > 0)
     {
         wxSleep(1);
         timeout--;
@@ -3046,7 +3053,7 @@ void MulticastSThread::OnExit()
 
 void* MulticastSThread::Entry()
 {
-    g_thread_active = true;
+    g_Sthread_active = true;
     //    Create a datagram socket for input
     m_myaddr.AnyAddress();             // equivalent to localhost
     m_myaddr.Service(m_service_port);     // the port must align with the expected multicast address
@@ -3133,7 +3140,7 @@ void* MulticastSThread::Entry()
     }
 
     thread_exit:
-    g_thread_active = false;
+    g_Sthread_active = false;
     return 0;
 }
 
@@ -3256,7 +3263,7 @@ void MulticastRXThread::OnExit()
 
 void* MulticastRXThread::Entry()
 {
-    g_thread_active = true;
+    g_RXthread_active = true;
     //    Create a datagram socket for input
     m_myaddr.AnyAddress();             // equivalent to localhost
     m_myaddr.Service(m_service_port);     // the port must align with the expected multicast address
@@ -3372,7 +3379,7 @@ void* MulticastRXThread::Entry()
     }
 
     thread_exit:
-    g_thread_active = false;
+    g_RXthread_active = false;
     return 0;
 }
 
