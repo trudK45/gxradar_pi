@@ -1,3 +1,4 @@
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
 /******************************************************************************
 *
 * Project:  OpenCPN
@@ -89,11 +90,13 @@ static const long long lNaN = 0xfff8000000000000;
 bool              g_RXthread_active;
 bool              g_Sthread_active;
 
-unsigned char buf[10000];           // The data buffer shared between the RX thread and the main thread
+unsigned char RXbuf[1000];         // The data buffer for the RX thread 
+unsigned char Sbuf[1000];          // The data buffer for the S thread
 
 int            g_scan_display_meters;
 int            g_scan_range_meters;
 unsigned short g_scan_angle;
+unsigned short g_last_scan_angle;
 int            g_scan_gain_level;
 int            g_scan_gain_mode;
 int            g_scan_sea_clutter_on_off;
@@ -121,6 +124,7 @@ double         g_current_headings[NO_OF_RADIALS]= {0.0};
 double         g_static_headings[NO_OF_RADIALS] = {0.0};
 
 int            g_scan_packets_per_tick;
+int            g_radar_data_packets_per_rev;
 int            g_prev_radar_state;
 int            g_sweep_count;
 int            g_radar_state;
@@ -1902,9 +1906,9 @@ void gxradar_pi::SetPositionFixEx(PlugIn_Position_Fix_Ex &pfix)
     if (g_hdt != hdt_last_message)
     {
         wxString msg;
-        msg.Printf(_T("True Heading:  %g  Mag Heading:  %g  Variation:  %g    thpri: %i  mhpri: %i  vpri: %i\n"),
-                   g_hdt, m_hdm, m_var, mPriHeadingT, mPriHeadingM, mPriVar);
-        grLogMessage(msg);
+//        msg.Printf(_T("True Heading:  %g  Mag Heading:  %g  Variation:  %g    thpri: %i  mhpri: %i  vpri: %i\n"),
+//                   g_hdt, m_hdm, m_var, mPriHeadingT, mPriHeadingM, mPriVar);
+//        grLogMessage(msg);
     
         hdt_last_message = g_hdt;
     }
@@ -2271,11 +2275,11 @@ void gxradar_pi::UpdateState(void)
 
         grLogMessage(msg);
 
-        if (g_scan_packets_per_tick)
-        {
-            msg.Printf(_T("Scan packets per tick: %d\n"), g_scan_packets_per_tick );
-            grLogMessage( msg );
-        }
+//        if (g_scan_packets_per_tick)
+//        {
+//            msg.Printf(_T("Scan packets per tick: %d\n"), g_scan_packets_per_tick );
+//            grLogMessage( msg );
+//        }
     }
 
     g_prev_radar_state = g_radar_state;
@@ -2986,7 +2990,7 @@ void gxradar_pi::SetNoXmitEndAngle(int mode)
     SendCommand((unsigned char *)&pck, sizeof(pck));
 
     wxString msg;
-    msg.Printf(_T("m_noxmit_endt_angle: %d \n"), m_noxmit_end_angle);
+    msg.Printf(_T("m_noxmit_end_angle: %d \n"), m_noxmit_end_angle);
     grLogMessage(msg);
 }
 
@@ -3053,11 +3057,11 @@ void MulticastSThread::OnExit()
 
 void* MulticastSThread::Entry()
 {
+	wxString msg;
     g_Sthread_active = true;
     //    Create a datagram socket for input
     m_myaddr.AnyAddress();             // equivalent to localhost
     m_myaddr.Service(m_service_port);     // the port must align with the expected multicast address
-
 
     m_sock = new wxDatagramSocket(m_myaddr, wxSOCKET_REUSEADDR);
     m_sock->SetFlags(wxSOCKET_BLOCK);
@@ -3130,11 +3134,13 @@ void* MulticastSThread::Entry()
             goto thread_exit;
         }
 
-        m_sock->RecvFrom(rx_addr, buf, sizeof(buf));
+        m_sock->RecvFrom(rx_addr, Sbuf, sizeof(Sbuf));
         //       printf(" bytes read %d\n", m_sock->LastCount());
 
         if (m_sock->LastCount())
         {
+//			msg.Printf(_T("Bytes read =  %d \n"), m_sock->LastCount());
+//			grLogMessage(msg);
             process_scan_buffer();
         }
     }
@@ -3153,8 +3159,9 @@ void MulticastSThread::process_scan_buffer(void)
 {
 
     packet_type_pkt packet;
-    memcpy(&packet, buf, sizeof(packet_type_pkt));
+    memcpy(&packet, Sbuf, sizeof(packet_type_pkt));
     unsigned short packet_type = packet.packet_type;
+	wxString msg;
 
     switch (packet_type)
     {
@@ -3163,7 +3170,7 @@ void MulticastSThread::process_scan_buffer(void)
             if ((g_radar_state == RADAR_TX_ACTIVE)||(g_radar_state == RADAR_TT_TX_ACTIVE))
             {
                 radar_scanline_pkt packet;
-                memcpy(&packet, buf, sizeof(radar_scanline_pkt));
+                memcpy(&packet, Sbuf, sizeof(radar_scanline_pkt));
 
                 if ((packet.scan_length_bytes > g_max_scan_length_bytes) || (g_scan_buf == 0))
                 {
@@ -3186,14 +3193,46 @@ void MulticastSThread::process_scan_buffer(void)
                 // >= 0 g_scan_angle < 1440
                 g_scan_angle = packet.angle/8;
 
+/*				if (g_scan_angle == 0)
+				{
+					if (g_last_scan_angle != 1439)
+					{
+						msg.Printf(_T("g_last_scan_angle rev = %d, g_scan_angle = %d\n"), g_last_scan_angle,g_scan_angle);
+						grLogMessage(msg);
+					}
+				}
+				else
+				{
+					if (g_scan_angle != g_last_scan_angle+1)
+					{
+						msg.Printf(_T("g_last_scan_angle rev = %d, g_scan_angle = %d\n"), g_last_scan_angle,g_scan_angle);
+						grLogMessage(msg);						
+					}
+				} */
+				
+				g_last_scan_angle = g_scan_angle;
 
                 if (g_scan_angle == LAST_RADIAL)
-                    g_sweep_count++;
+				{
+					g_sweep_count++;
+/*					g_radar_data_packets_per_rev++;
+					if (g_radar_data_packets_per_rev != 1440)
+					{
+						msg.Printf(_T("Radials per rev =  %d \n"), g_radar_data_packets_per_rev);
+						grLogMessage(msg);
+					}
+
+					g_radar_data_packets_per_rev = 0;					
+				}
+				else
+				{
+					g_radar_data_packets_per_rev++;	*/				
+				}
 
                 g_current_scan_length_bytes = packet.scan_length_bytes;
 
                 // Pointer to first data sample in the buffer skipping paramters.
-                unsigned char *packet_data = buf + sizeof(radar_scanline_pkt) - 1;
+                unsigned char *packet_data = Sbuf + sizeof(radar_scanline_pkt) - 1;
                 // Pointer to storage position in scan buffer.
                 unsigned char *dest_data = &g_scan_buf[packet.scan_length_bytes * g_scan_angle];
 
@@ -3226,12 +3265,11 @@ void MulticastSThread::process_scan_buffer(void)
 
     default:
         {
-            break;
+//			msg.Printf(_T("Pack_type =  %x \n"), packet_type);
+//            break;
         }
     }
 }
-
-
 
 
 
@@ -3346,7 +3384,7 @@ void* MulticastRXThread::Entry()
             goto thread_exit;
         }
 
-        m_sock->RecvFrom(rx_addr, buf, sizeof(buf));
+        m_sock->RecvFrom(rx_addr, RXbuf, sizeof(RXbuf));
         //       printf(" bytes read %d\n", m_sock->LastCount());
         x = m_sock->LastCount();
     
@@ -3369,7 +3407,7 @@ void* MulticastRXThread::Entry()
             goto thread_exit;
         }
 
-        m_sock->RecvFrom(rx_addr, buf, sizeof(buf));
+        m_sock->RecvFrom(rx_addr, RXbuf, sizeof(RXbuf));
         //       printf(" bytes read %d\n", m_sock->LastCount());
 
         if (m_sock->LastCount())
@@ -3389,7 +3427,7 @@ void MulticastRXThread::process_buffer(void)
     //      unsigned short packet_type = *(unsigned short *)(&buf[0]);
     
     packet_type_pkt packet;
-    memcpy(&packet, buf, sizeof(packet_type_pkt));
+    memcpy(&packet, RXbuf, sizeof(packet_type_pkt));
     unsigned short packet_type = packet.packet_type;
     
     
@@ -3401,7 +3439,7 @@ void MulticastRXThread::process_buffer(void)
             // Dome Speed
             g_scan_packets_per_tick++;
             rad_respond_pkt_9 packet;
-            memcpy(&packet, buf, sizeof(packet));
+            memcpy(&packet, RXbuf, sizeof(packet));
     
             g_scan_dome_speed = packet.parm1;
     
@@ -3413,7 +3451,7 @@ void MulticastRXThread::process_buffer(void)
             // Transmitt
             g_scan_packets_per_tick++;
             rad_respond_pkt_9 packet;
-            memcpy(&packet, buf, sizeof(packet));
+            memcpy(&packet, RXbuf, sizeof(packet));
     
             g_scan_transmit = packet.parm1;
     
@@ -3425,7 +3463,7 @@ void MulticastRXThread::process_buffer(void)
             // Auto Gain Mode
             g_scan_packets_per_tick++;
             rad_respond_pkt_9 packet;
-            memcpy(&packet, buf, sizeof(packet));
+            memcpy(&packet, RXbuf, sizeof(packet));
     
             if (g_scan_gain_auto)
             {
@@ -3450,7 +3488,7 @@ void MulticastRXThread::process_buffer(void)
             // Range
             g_scan_packets_per_tick++;
             rad_respond_pkt_12 packet;
-            memcpy(&packet, buf, sizeof(packet));
+            memcpy(&packet, RXbuf, sizeof(packet));
     
             g_scan_range_meters = packet.parm1;
     
@@ -3462,7 +3500,7 @@ void MulticastRXThread::process_buffer(void)
             // Auto Gain
             g_scan_packets_per_tick++;
             rad_respond_pkt_9 packet;
-            memcpy(&packet, buf, sizeof(packet));
+            memcpy(&packet, RXbuf, sizeof(packet));
     
             g_scan_gain_auto = packet.parm1>>1;
             if (!g_scan_gain_auto)
@@ -3477,7 +3515,7 @@ void MulticastRXThread::process_buffer(void)
             // Gain
             g_scan_packets_per_tick++;
             rad_respond_pkt_10 packet;
-            memcpy(&packet, buf, sizeof(packet));
+            memcpy(&packet, RXbuf, sizeof(packet));
     
             g_scan_gain_level  = packet.parm1/100;
     
@@ -3489,7 +3527,7 @@ void MulticastRXThread::process_buffer(void)
             // Dome offset
             g_scan_packets_per_tick++;
             rad_respond_pkt_12 packet;
-            memcpy(&packet, buf, sizeof(packet));
+            memcpy(&packet, RXbuf, sizeof(packet));
     
             g_scan_dome_offset = packet.parm1/32;
     
@@ -3501,7 +3539,7 @@ void MulticastRXThread::process_buffer(void)
             // Crosstalk reject
             g_scan_packets_per_tick++;
             rad_respond_pkt_9 packet;
-            memcpy(&packet, buf, sizeof(packet));
+            memcpy(&packet, RXbuf, sizeof(packet));
     
             g_scan_crosstalk_mode =  packet.parm1;
     
@@ -3513,7 +3551,7 @@ void MulticastRXThread::process_buffer(void)
             // Rain clutter mode
             g_scan_packets_per_tick++;
             rad_respond_pkt_9 packet;
-            memcpy(&packet, buf, sizeof(packet));
+            memcpy(&packet, RXbuf, sizeof(packet));
     
             g_scan_rain_clutter_mode =packet.parm1;
     
@@ -3525,7 +3563,7 @@ void MulticastRXThread::process_buffer(void)
             // Rain clutter level
             g_scan_packets_per_tick++;
             rad_respond_pkt_10 packet;
-            memcpy(&packet, buf, sizeof(packet));
+            memcpy(&packet, RXbuf, sizeof(packet));
     
             g_scan_rain_clutter_level = packet.parm1/100;
     
@@ -3537,7 +3575,7 @@ void MulticastRXThread::process_buffer(void)
             // Sea Clutter On/Off
             g_scan_packets_per_tick++;
             rad_respond_pkt_9 packet;
-            memcpy(&packet, buf, sizeof(packet));
+            memcpy(&packet, RXbuf, sizeof(packet));
     
             switch (packet.parm1)
             {
@@ -3568,7 +3606,7 @@ void MulticastRXThread::process_buffer(void)
             // Sea Clutter level
             g_scan_packets_per_tick++;
             rad_respond_pkt_10 packet;
-            memcpy(&packet, buf, sizeof(packet));
+            memcpy(&packet, RXbuf, sizeof(packet));
     
             g_scan_sea_clutter_level = packet.parm1/100;
     
@@ -3580,7 +3618,7 @@ void MulticastRXThread::process_buffer(void)
             // Sea clutter mode
             g_scan_packets_per_tick++;
             rad_respond_pkt_9 packet;
-            memcpy(&packet, buf, sizeof(packet));
+            memcpy(&packet, RXbuf, sizeof(packet));
     
             if (g_scan_sea_clutter_manual)
             {
@@ -3600,7 +3638,7 @@ void MulticastRXThread::process_buffer(void)
             // No Xmit Zone mode
             g_scan_packets_per_tick++;
             rad_respond_pkt_9 packet;
-            memcpy(&packet, buf, sizeof(packet));
+            memcpy(&packet, RXbuf, sizeof(packet));
     
             g_scan_noxmitzone_mode = packet.parm1;
             break;
@@ -3611,7 +3649,7 @@ void MulticastRXThread::process_buffer(void)
             // No Xmit Start Angle
             g_scan_packets_per_tick++;
             rad_respond_pkt_12 packet;
-            memcpy(&packet, buf, sizeof(packet));
+            memcpy(&packet, RXbuf, sizeof(packet));
     
             if (packet.parm1 < 0)
             {
@@ -3631,7 +3669,7 @@ void MulticastRXThread::process_buffer(void)
             // No Xmit End Angle
             g_scan_packets_per_tick++;
             rad_respond_pkt_12 packet;
-            memcpy(&packet, buf, sizeof(packet));
+            memcpy(&packet, RXbuf, sizeof(packet));
     
             if (packet.parm1 < 0)
             {
@@ -3650,7 +3688,7 @@ void MulticastRXThread::process_buffer(void)
             // Scanner state
             g_scan_packets_per_tick++;
             rad_respond_pkt_9 packet;
-            memcpy(&packet, buf, sizeof(packet));
+            memcpy(&packet, RXbuf, sizeof(packet));
             g_scanner_state = packet.parm1;
             break;
         }
@@ -3660,7 +3698,7 @@ void MulticastRXThread::process_buffer(void)
             // Warm up timer
             g_scan_packets_per_tick++;
             rad_respond_pkt_12 packet;
-            memcpy(&packet, buf, sizeof(packet));
+            memcpy(&packet, RXbuf, sizeof(packet));
             g_warmup_timer = packet.parm1;
             break;
         }
