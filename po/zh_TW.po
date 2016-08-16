@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: opencpn\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-06 09:33-0600\n"
-"PO-Revision-Date: 2015-01-10 13:43-0500\n"
+"POT-Creation-Date: 2016-08-14 12:05-0300\n"
+"PO-Revision-Date: 2016-08-14 11:09-0400\n"
 "Last-Translator: nohal <pavel@kalian.cz>\n"
 "Language-Team: Chinese Traditional\n"
 "Language: zh_TW\n"
@@ -13,37 +13,39 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: crowdin.com\n"
 "X-Crowdin-Project: opencpn\n"
+"X-Crowdin-Language: zh-TW\n"
 "X-Crowdin-File: /plugins/gxradar_pi/po/gxradar_pi.pot\n"
 
-#: src/gxradar_pi.cpp:782
+#: src/gxradar_pi.cpp:787
 msgid "Radar Control Garmin"
 msgstr ""
 
-#: src/gxradar_pi.cpp:924
+#: src/gxradar_pi.cpp:935
 msgid "Garmin Radar PlugIn for OpenCPN"
 msgstr ""
 
-#: src/gxradar_pi.cpp:929
+#: src/gxradar_pi.cpp:940
 msgid "Garmin Radar PlugIn for OpenCPN\n"
 msgstr ""
 
-#: src/gxradar_pi.cpp:1207
+#: src/gxradar_pi.cpp:1218
 msgid "No scanner activity, reverting to search\n"
 msgstr ""
 
-#: src/gxradar_pi.cpp:2995
+#: src/gxradar_pi.cpp:3006
 msgid "The Radar Overlay PlugIn requires OpenGL mode to be activated in Toolbox->Settings"
 msgstr ""
 
-#: src/gxradar_pi.cpp:3008
-msgid "The Radar Overlay PlugIn is unable to\ndirectly control the radar scanner.\n\n"
+#: src/gxradar_pi.cpp:3019
+msgid "The Radar Overlay PlugIn is unable to\n"
+"directly control the radar scanner.\n\n"
 msgstr ""
 
-#: src/gxradar_pi.cpp:3009
+#: src/gxradar_pi.cpp:3020
 msgid "Scanner is located at ip address: "
 msgstr ""
 
-#: src/gxradar_pi.cpp:3012
+#: src/gxradar_pi.cpp:3023
 msgid "Interfaces available on this computer are:\n"
 msgstr ""
 
